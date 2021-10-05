@@ -1,0 +1,14 @@
+{  
+    "name": "production-analyst",
+    "version": "0.1.0",
+    "title": "Production Analyst",
+    "author": "Inappropriate Penguin",
+    "homepage": "https://github.com/InappropriatePenguin/production-analyst",
+    "dependencies": [  
+       "base >= 1.1.40",
+       "flib >= 0.8.4"
+    ],
+    "description": "Analyze the consumption of an item or fluid throughout your entire factory.",
+    "factorio_version": "1.1"
+ }
+ 
