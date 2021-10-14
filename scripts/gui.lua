@@ -1,12 +1,20 @@
 Gui = {}
 
+---Creates an overhead shortcut for the given player
+---@param player_index number Player index
 function Gui.create_overhead_button(player_index)
     local playerdata = get_make_playerdata(player_index)
     local button_flow = mod_gui.get_button_flow(playerdata.luaplayer)
 
     if button_flow[NAME.gui.overhead_button] then return end
 
-    playerdata.gui.overhead_button = button_flow.add{type="button", name=NAME.gui.overhead_button, caption="PA", style="mod_gui_button"}
+    playerdata.gui.overhead_button = button_flow.add{
+        type = "button",
+        name = NAME.gui.overhead_button,
+        caption = "PA",
+        tooltip = {"production-analyst.toggle-gui"},
+        style = "mod_gui_button"
+    }
 end
 
 function Gui.create_gui(player_index)
@@ -28,11 +36,14 @@ function Gui.create_gui(player_index)
     root.auto_center = true
     playerdata.gui.root = root
 
+    -- Create title bar
     local titlebar_flow = root.add{type="flow", direction="horizontal"}
     titlebar_flow.drag_target = root
     titlebar_flow.add{type="label", caption="Production Analyst", ignored_by_interaction=true, style="frame_title"}
     titlebar_flow.add{type="empty-widget", ignored_by_interaction=true, style=NAME.style.titlebar_space_header}
-    titlebar_flow.add{type="sprite-button", name=NAME.gui.close_button, sprite="utility/close_white", hovered_sprite="utility/close_black", style="close_button"}
+    titlebar_flow.add{
+        type="sprite-button",
+        name=NAME.gui.close_button, sprite="utility/close_white", hovered_sprite="utility/close_black", style="close_button"}
 
     -- Split frame into left (results) and right (queue/history) panes
     local main_horizontal_flow = root.add{
