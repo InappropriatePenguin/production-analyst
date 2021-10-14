@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.0.2
+Date: 2021-10-14
+  Features:
+    - Added plus icon to the item/fluid selector button to make it more discoverable.
+
+  Bugfixes:
+    - Fixed it being possible for the player to shift the queue position of active tasks.
+---------------------------------------------------------------------------------------------------
 Version: 1.0.1
 Date: 2021-10-14
   Bugfixes:
