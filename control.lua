@@ -140,7 +140,8 @@ function move_up_queue(force_name, task_id)
     local queue = forcedata.queue
     local task_index = get_task_index(queue, task_id)
 
-    if not task_index or  task_index == 1 then return end
+    if not task_index or task_index == 1 then return end
+    if forcedata.is_sampling and task_index - 1 == 1 then return end
 
     local new_task = queue[task_index]
     local old_task = queue[task_index - 1]
@@ -156,7 +157,8 @@ function move_down_queue(force_name, task_id)
     local queue = forcedata.queue
     local task_index = get_task_index(queue, task_id)
 
-    if not task_index or  task_index == #queue then return end
+    if not task_index or task_index == #queue then return end
+    if forcedata.is_sampling and task_index == 1 then return end
 
     local new_task = queue[task_index]
     local old_task = queue[task_index + 1]
