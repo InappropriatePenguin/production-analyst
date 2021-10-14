@@ -23,11 +23,18 @@ function on_player_created(event)
 end
 script.on_event(defines.events.on_player_created, on_player_created)
 
+---Removes playerdata references associated with the removed player
+---@param event table
 function on_player_removed(event)
-    local playerdata = get_make_playerdata(event.player_index)
-    local forcedata = get_make_forcedata(playerdata.force_name)
+    -- Find and delete any references to playerdata in forcedata tables
+    for _, forcedata in pairs(global.forcedata) do
+        if forcedata.playerdata[event.player_index] then
+            forcedata.playerdata[event.player_index] = nil
+            break
+        end
+    end
 
-    forcedata.playerdata[event.player_index] = nil
+    -- Delete playerdata in global playerdata table
     global.playerdata[event.player_index] = nil
 end
 script.on_event(defines.events.on_player_removed, on_player_removed)
