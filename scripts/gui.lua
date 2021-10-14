@@ -94,6 +94,8 @@ function Gui.create_gui(player_index)
         name=NAME.gui.ingredient_selector_elem_button,
         tooltip={"production-analyst.add-to-queue"},
         elem_type="signal", style=NAME.style.queue_add_button}
+    queue_button_frame.add{type="sprite", sprite="utility/add", resize_to_sprite=false, ignored_by_interaction=true, style=NAME.style.queue_add_sprite}
+
     queue_button_frame.add{type="sprite-button", name=NAME.gui.queue_remove_button, sprite=mod_prefix.."remove-icon", tooltip={"production-analyst.remove-from-queue"}, style=NAME.style.queue_button}
     queue_button_frame.add{type="empty-widget", style=NAME.style.button_spacer}
     queue_button_frame.add{type="sprite-button", name=NAME.gui.queue_move_down_button, sprite="utility/speed_down", tooltip={"production-analyst.move-down-queue"}, style=NAME.style.queue_button}

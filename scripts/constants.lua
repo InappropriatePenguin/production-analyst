@@ -68,6 +68,7 @@ NAME = {
 
         queue_button_frame = mod_prefix .. "queue-button-frame",
         queue_add_button = mod_prefix .. "queue-add-button",
+        queue_add_sprite = mod_prefix .. "queue-add-sprite",
         queue_button = mod_prefix .. "queue_button",
         queue_container = mod_prefix .. "queue-container",
         queue_listbox = mod_prefix .. "queue-listbox",

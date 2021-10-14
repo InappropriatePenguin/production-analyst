@@ -192,6 +192,14 @@ guistyle[NAME.style.queue_add_button] = {
     height = 32
 }
 
+guistyle[NAME.style.queue_add_sprite] = {
+    type = "image_style",
+    width = 20,
+    height = 20,
+    left_margin = -27,
+    right_margin = 6
+}
+
 guistyle[NAME.style.button_spacer] = {
     type = "empty_widget_style",
     horizontally_stretchable = "stretch_and_expand"
