@@ -1,5 +1,7 @@
 Gui = {}
 
+local mod_gui = require("__core__/lualib/mod-gui")
+
 ---Creates an overhead shortcut for the given player
 ---@param player_index number Player index
 function Gui.create_overhead_button(player_index)
@@ -167,8 +169,7 @@ function Gui.render_topbar(player_index)
         local localized_name = task.ingredient.type == "item" and
             game.item_prototypes[task.ingredient.name].localised_name or
             game.fluid_prototypes[task.ingredient.name].localised_name
-        -- status_label.caption = {"", "Monitoring " .. #task.consumers .. " entities for " .. icon_str, localized_name, " consumption"}
-        status_label.caption = {"production-analyst.topbar-status-text", #task.consumers, icon_str, localized_name}
+        status_label.caption = {"production-analyst.topbar-status-text", table_size(task.consumers), icon_str, localized_name}
 
         local start_tick = task.start_tick or game.tick
         local time_progress = (game.tick - start_tick) / (task.run_time * 60)

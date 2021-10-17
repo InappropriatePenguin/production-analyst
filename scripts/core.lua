@@ -9,6 +9,7 @@ function get_make_forcedata(force_name)
             name = force_name,
             luaforce = game.forces[force_name],
             playerdata = {},
+            crafting_entities = get_crafting_entities(force_name),
             queue = {},
             history = {},
             is_sampling = false
@@ -56,6 +57,19 @@ function get_make_playerdata(player_index)
     return playerdata
 end
 
+function get_crafting_entities(force_name)
+    local luaforce = game.forces[force_name]
+    local crafting_entities = {}
+
+    for _, surface in pairs(game.surfaces) do
+        local entities = surface.find_entities_filtered{
+            type={"assembling-machine", "furnace", "rocket-silo"}, force=luaforce}
+        if #entities > 0 then crafting_entities[surface.index] = entities end
+    end
+
+    return crafting_entities
+end
+
 function start_task(force_name, index)
     local forcedata = get_make_forcedata(force_name)
     local task = forcedata.queue[index or 1]
@@ -77,7 +91,7 @@ function start_task(force_name, index)
 
     Gui.refresh_topbar(forcedata.name)
 
-    script.on_nth_tick(60, tick_task)
+    script.on_nth_tick(60, nth_tick_task)
 end
 
 function get_ingredient_amount(ingredient_name, recipe)
@@ -129,27 +143,32 @@ end
 ---@return table consumers
 function get_consumers(task, forcedata)
     local recipes = task.recipes
-    local entities, consumers = nil, {}
+    local consumers = {}
 
-    for _, surface in pairs(game.surfaces) do
-        entities = surface.find_entities_filtered{
-            type={"assembling-machine", "furnace", "rocket-silo"}, force=forcedata.luaforce}
-        for __, entity in pairs(entities) do
-            local current_recipe = entity.get_recipe()
-            local key = current_recipe and current_recipe.name or nil
+    for surface_index, entities in pairs(forcedata.crafting_entities) do
+        for unit_number, entity in pairs(entities) do
+            if entity.valid then
+                local current_recipe = entity.get_recipe()
+                local key = current_recipe and current_recipe.name or nil
 
-            local multiplier = 1
-            if entity.type == "rocket-silo" then
-                multiplier = entity.prototype.rocket_parts_required
-            end
+                local multiplier = 1
+                if entity.type == "rocket-silo" then
+                    multiplier = entity.prototype.rocket_parts_required
+                end
 
-            if recipes[key] then
-                table.insert(consumers, {
-                    luaentity = entity,
-                    recipe_name = key,
-                    amount = recipes[key].amount,
-                    multiplier = multiplier
-                })
+                if recipes[key] then
+                    consumers[entity.unit_number] = {
+                        luaentity = entity,
+                        recipe_name = key,
+                        amount = recipes[key].amount,
+                        multiplier = multiplier
+                    }
+                end
+            else
+                entities[unit_number] = nil
+                if table_size(entities) == 0 then
+                    forcedata[surface_index] = nil
+                end
             end
         end
     end

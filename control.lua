@@ -2,8 +2,10 @@ require("scripts/constants")
 require("scripts/core")
 require("scripts/gui")
 
-mod_gui = require("__core__/lualib/mod-gui")
-
+local event_filter = {
+    {filter="type", type="assembling-machine"},
+    {filter="type", type="furnace"},
+    {filter="type", type="rocket-silo"}}
 
 function on_init()
     global.forcedata = {}
@@ -64,6 +66,12 @@ function on_configuration_changed(event)
             Gui.create_overhead_button(player.index)
         end
     end
+
+    for _, forcedata in pairs(global.forcedata) do
+        if not forcedata.crafting_entities then
+            forcedata.crafting_entities = get_crafting_entities(forcedata.name)
+        end
+    end
 end
 script.on_configuration_changed(on_configuration_changed)
 
@@ -91,7 +99,6 @@ function is_any_force_sampling()
 
     return false
 end
-
 
 ---Creates a new task and adds it to the end of the queue for the player's force
 ---@param args table Table with {player_index, ingredient, run_time}
@@ -212,7 +219,58 @@ function delete_history(force_name)
     end
 end
 
-function tick_task(event)
+---Adds entity reference to force's crafting_entities table
+---@param event table
+function on_entity_created(event)
+    local entity = event.created_entity or event.entity or event.destination
+    local forcedata = get_make_forcedata(entity.force.name)
+
+    local crafting_entities = forcedata.crafting_entities
+    local surface_index = entity.surface.index
+
+    -- Create surface table if one doesn't exist
+    crafting_entities[surface_index] = crafting_entities[surface_index] or {}
+
+    -- Add entity to appropriate crafting_entities table
+    crafting_entities[surface_index][entity.unit_number] = entity
+end
+script.on_event(defines.events.on_built_entity, on_entity_created, event_filter)
+script.on_event(defines.events.on_robot_built_entity, on_entity_created, event_filter)
+script.on_event(defines.events.on_entity_cloned, on_entity_created, event_filter)
+script.on_event(defines.events.script_raised_built, on_entity_created, event_filter)
+script.on_event(defines.events.script_raised_revive, on_entity_created, event_filter)
+
+---Removes entity reference from force's crafting_entities table
+---@param event table
+function on_entity_destroyed(event)
+    local entity = event.entity
+    local forcedata = get_make_forcedata(entity.force.name)
+    local surface_index = entity.surface.index
+
+    -- Remove entity reference if it exists
+    if forcedata.crafting_entities[surface_index] then
+        forcedata.crafting_entities[surface_index][entity.unit_number] = nil
+    end
+
+    -- Remove surface table reference if empty
+    if table_size(forcedata.crafting_entities[surface_index]) == 0 then
+        forcedata.crafting_entities[surface_index] = nil
+    end
+end
+script.on_event(defines.events.on_entity_died, on_entity_destroyed, event_filter)
+script.on_event(defines.events.on_player_mined_entity, on_entity_destroyed, event_filter)
+script.on_event(defines.events.on_robot_mined_entity, on_entity_destroyed, event_filter)
+script.on_event(defines.events.script_raised_destroy, on_entity_destroyed, event_filter)
+
+function on_surface_cleared(event)
+    for _, forcedata in pairs(global.forcedata) do
+        forcedata.crafting_entities[event.surface_index] = nil
+    end
+end
+script.on_event(defines.events.on_surface_cleared, on_surface_cleared)
+script.on_event(defines.events.on_surface_deleted, on_surface_cleared)
+
+function nth_tick_task(event)
     for _, forcedata in pairs(global.forcedata) do
         if forcedata.is_sampling then
             local task = forcedata.queue[1]
