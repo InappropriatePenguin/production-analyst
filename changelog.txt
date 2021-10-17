@@ -1,4 +1,14 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.1.0
+Date: 2021-10-16
+  Features:
+    - Reworked how the mod initially finds relevant entities to monitor at the beginning of a run,
+      improving performance on very large maps.
+    - Added a command "/reset-prod-analyst-entities", which you can use if a crafting machine isn't
+      being monitored by the mod during a run where it should be. This can happen if a different
+      mod created that entity without raising the correspondings scripting event.
+    - Changed the mod button style to better fit with other mod buttons.
+---------------------------------------------------------------------------------------------------
 Version: 1.0.2
 Date: 2021-10-14
   Features:
@@ -11,7 +21,6 @@ Version: 1.0.1
 Date: 2021-10-14
   Bugfixes:
     - Fixed crash when starting a testing scenario using the Editor Extensions mod.
-
 ---------------------------------------------------------------------------------------------------
 Version: 1.0.0
 Date: 2021-10-13
