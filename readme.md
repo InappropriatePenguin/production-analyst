@@ -14,3 +14,7 @@ and modded games.
 
 You can download it from the Factorio
 [Mod Portal](https://mods.factorio.com/mod/production-analyst).
+
+## Credits
+
+Mod button icon: Table by IconMark from the Noun Project

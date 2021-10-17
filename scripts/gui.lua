@@ -8,14 +8,18 @@ function Gui.create_overhead_button(player_index)
     local playerdata = get_make_playerdata(player_index)
     local button_flow = mod_gui.get_button_flow(playerdata.luaplayer)
 
-    if button_flow[NAME.gui.overhead_button] then return end
+    if button_flow[NAME.gui.overhead_button] then
+        button_flow[NAME.gui.overhead_button].destroy()
+    end
 
     playerdata.gui.overhead_button = button_flow.add{
-        type = "button",
+        type = "sprite-button",
         name = NAME.gui.overhead_button,
-        caption = "PA",
+        sprite = mod_prefix .. "mod-icon-light",
+        hovered_sprite = mod_prefix .. "mod-icon-dark",
+        clicked_sprite = mod_prefix .. "mod-icon-dark",
         tooltip = {"production-analyst.toggle-gui"},
-        style = "mod_gui_button"
+        style = "slot_button"
     }
 end
 

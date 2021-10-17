@@ -14,6 +14,24 @@ data:extend{
         width = 32,
         height = 32,
         flags = {"icon"}
+    },
+    {
+        type = "sprite",
+        name = mod_prefix .. "mod-icon-light",
+        filename = "__production-analyst__/graphics/mod-icon-light.png",
+        priority = "medium",
+        width = 64,
+        height = 64,
+        flags = {"icon"}
+    },
+    {
+        type = "sprite",
+        name = mod_prefix .. "mod-icon-dark",
+        filename = "__production-analyst__/graphics/mod-icon-dark.png",
+        priority = "medium",
+        width = 64,
+        height = 64,
+        flags = {"icon"}
     }
 }
 
