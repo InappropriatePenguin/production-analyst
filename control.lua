@@ -1,6 +1,7 @@
 require("scripts/constants")
 require("scripts/core")
 require("scripts/gui")
+require("scripts/commands")
 
 local event_filter = {
     {filter="type", type="assembling-machine"},
