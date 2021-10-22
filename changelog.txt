@@ -6,7 +6,7 @@ Date: 2021-10-16
       improving performance on very large maps.
     - Added a command "/reset-prod-analyst-entities", which you can use if a crafting machine isn't
       being monitored by the mod during a run where it should be. This can happen if a different
-      mod created that entity without raising the correspondings scripting event.
+      mod created that entity without raising the corresponding scripting event.
     - Changed the mod button style to better fit with other mod buttons.
 ---------------------------------------------------------------------------------------------------
 Version: 1.0.2
