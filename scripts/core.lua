@@ -118,7 +118,7 @@ function get_ingredient_amount(ingredient_name, recipe)
 
     for _, product in pairs(recipe.products) do
         if ingredient_name == product.name then
-            local product_amount = product.amount or (0.5*(product.amount.min + product.amount.max))
+            local product_amount = product.amount or (0.5*(product.amount_min + product.amount_max))
             product_amount = product_amount * (product.probability or 1)
             amount = amount - (product.amount * product.probability)
         end
