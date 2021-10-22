@@ -97,11 +97,21 @@ end
 function get_ingredient_amount(ingredient_name, recipe)
     if recipe.object_name ~= "LuaRecipe" then return end
 
+    local amount
+
     for _, ingredient in pairs(recipe.ingredients) do
         if ingredient_name == ingredient.name then
-            return ingredient.amount
+            amount = ingredient.amount
         end
     end
+
+    for _, product in pairs(recipe.products) do
+        if ingredient_name == product.name then
+            amount = amount - product.amount
+        end
+    end
+
+    return amount > 0 and amount or nil
 end
 
 ---Gets table of recipes unlocked by the given force that consume the target ingredient.
@@ -122,11 +132,12 @@ function get_consuming_recipes(ingredient, forcedata)
 
     for index, _ in pairs(prototypes) do
         local recipe = forcedata.luaforce.recipes[index]
-        if recipe then
+        local amount = get_ingredient_amount(ingredient.name, recipe)
+        if recipe and amount then
             recipes[index] = {
                 luarecipe = recipe,
                 recipe_name = recipe.name,
-                amount = get_ingredient_amount(ingredient.name, recipe),
+                amount = amount,
                 energy = recipe.energy,
                 machines = 0,
                 crafts = 0,
