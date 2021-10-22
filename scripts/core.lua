@@ -57,6 +57,9 @@ function get_make_playerdata(player_index)
     return playerdata
 end
 
+---Gets crafting entities belonging to force using find_entities_filtered call
+---@param force_name string Force name
+---@return table crafting_entities 2d table of crafting entities index by surface index, unit number
 function get_crafting_entities(force_name)
     local luaforce = game.forces[force_name]
     local crafting_entities = {}
@@ -70,6 +73,9 @@ function get_crafting_entities(force_name)
     return crafting_entities
 end
 
+---Start analysis of a task (first in queue if no index is gen) belonging to certain force
+---@param force_name string Force's name
+---@param index number Index of task to be started within queue table, defaults to 1
 function start_task(force_name, index)
     local forcedata = get_make_forcedata(force_name)
     local task = forcedata.queue[index or 1]
@@ -94,6 +100,11 @@ function start_task(force_name, index)
     script.on_nth_tick(60, nth_tick_task)
 end
 
+---Gets the amount of ingredient consumed by a recipe after subtracting average product yield of
+---of the ingredient from the recipe
+---@param ingredient_name string Ingredient name
+---@param recipe table `LuaRecipe`
+---@return number|nil amount Amount of ingredient consumed by recipe, nil if that is <= 0
 function get_ingredient_amount(ingredient_name, recipe)
     if recipe.object_name ~= "LuaRecipe" then return end
 
@@ -107,7 +118,9 @@ function get_ingredient_amount(ingredient_name, recipe)
 
     for _, product in pairs(recipe.products) do
         if ingredient_name == product.name then
-            amount = amount - product.amount
+            local product_amount = product.amount or (0.5*(product.amount.min + product.amount.max))
+            product_amount = product_amount * (product.probability or 1)
+            amount = amount - (product.amount * product.probability)
         end
     end
 
@@ -240,6 +253,9 @@ function compute_totals(task)
     end
 end
 
+---Stops work on task for a given force.
+---@param forcedata table Forcedata table
+---@param index number Index of task within forcedata queue, defaults to 1
 function stop_task(forcedata, index)
     index = index or 1
 
