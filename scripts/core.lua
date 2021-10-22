@@ -127,8 +127,10 @@ function get_consuming_recipes(ingredient, forcedata)
                 luarecipe = recipe,
                 recipe_name = recipe.name,
                 amount = get_ingredient_amount(ingredient.name, recipe),
+                energy = recipe.energy,
                 machines = 0,
                 crafts = 0,
+                max_crafts = 0,
                 consumed = 0
             }
         end
@@ -161,6 +163,7 @@ function get_consumers(task, forcedata)
                         luaentity = entity,
                         recipe_name = key,
                         amount = recipes[key].amount,
+                        crafting_speed = entity.crafting_speed,
                         multiplier = multiplier
                     }
                 end
@@ -201,18 +204,20 @@ function compute_totals(task)
     -- Zero out counts in the recipes table
     for _, recipe in pairs(task.recipes) do
         recipe.crafts = 0
+        recipe.max_crafts = 0
         recipe.consumed = 0
         recipe.machines = 0
     end
 
     -- Tally consumption from each monitored entity
     for _, consumer in pairs(task.consumers) do
-        local recipe_entry = task.recipes[consumer.recipe_name]
+        local recipe = task.recipes[consumer.recipe_name]
         local consumed = consumer.count * consumer.amount
 
-        recipe_entry.machines = recipe_entry.machines + 1
-        recipe_entry.crafts = recipe_entry.crafts + consumer.count
-        recipe_entry.consumed = recipe_entry.consumed + consumed
+        recipe.machines = recipe.machines + 1
+        recipe.crafts = recipe.crafts + consumer.count
+        recipe.max_crafts = recipe.max_crafts + ((consumer.crafting_speed * time_in_sec) / recipe.energy)
+        recipe.consumed = recipe.consumed + consumed
         total_consumed = total_consumed + consumed
     end
 

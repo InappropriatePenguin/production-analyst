@@ -18,7 +18,7 @@ function Gui.create_overhead_button(player_index)
         sprite = mod_prefix .. "mod-icon-light",
         hovered_sprite = mod_prefix .. "mod-icon-dark",
         clicked_sprite = mod_prefix .. "mod-icon-dark",
-        tooltip = {"production-analyst.toggle-gui"},
+        tooltip = {"production-analyst-tooltip.toggle-gui"},
         style = "slot_button"
     }
 end
@@ -66,8 +66,8 @@ function Gui.create_gui(player_index)
         style=NAME.style.left_pane_flow}
 
     local action_button_flow = left_pane_flow.add{type="flow", name=NAME.gui.topbar_flow, style=NAME.style.topbar_flow}
-    action_button_flow.add{type="sprite-button", name=NAME.gui.start_button, sprite="utility/play", tooltip={"production-analyst.start"}, style=NAME.style.start_button}
-    action_button_flow.add{type="sprite-button", name=NAME.gui.stop_button, sprite="utility/brush_square_shape", tooltip={"production-analyst.stop"}, style=NAME.style.stop_button}
+    action_button_flow.add{type="sprite-button", name=NAME.gui.start_button, sprite="utility/play", tooltip={"production-analyst-tooltip.start"}, style=NAME.style.start_button}
+    action_button_flow.add{type="sprite-button", name=NAME.gui.stop_button, sprite="utility/brush_square_shape", tooltip={"production-analyst-tooltip.stop"}, style=NAME.style.stop_button}
     action_button_flow.add{type="empty-widget", style=NAME.style.button_spacer}
     action_button_flow.add{type="label", name=NAME.gui.status_label}
     action_button_flow.add{type="progressbar", name=NAME.gui.status_progress_bar, style=NAME.style.status_progress_bar}
@@ -98,14 +98,14 @@ function Gui.create_gui(player_index)
     queue_button_frame.add{
         type="choose-elem-button",
         name=NAME.gui.ingredient_selector_elem_button,
-        tooltip={"production-analyst.add-to-queue"},
+        tooltip={"production-analyst-tooltip.add-to-queue"},
         elem_type="signal", style=NAME.style.queue_add_button}
     queue_button_frame.add{type="sprite", sprite="utility/add", resize_to_sprite=false, ignored_by_interaction=true, style=NAME.style.queue_add_sprite}
 
-    queue_button_frame.add{type="sprite-button", name=NAME.gui.queue_remove_button, sprite=mod_prefix.."remove-icon", tooltip={"production-analyst.remove-from-queue"}, style=NAME.style.queue_button}
+    queue_button_frame.add{type="sprite-button", name=NAME.gui.queue_remove_button, sprite=mod_prefix.."remove-icon", tooltip={"production-analyst-tooltip.remove-from-queue"}, style=NAME.style.queue_button}
     queue_button_frame.add{type="empty-widget", style=NAME.style.button_spacer}
-    queue_button_frame.add{type="sprite-button", name=NAME.gui.queue_move_down_button, sprite="utility/speed_down", tooltip={"production-analyst.move-down-queue"}, style=NAME.style.queue_button}
-    queue_button_frame.add{type="sprite-button", name=NAME.gui.queue_move_up_button, sprite="utility/speed_up", tooltip={"production-analyst.move-up-queue"}, style=NAME.style.queue_button}
+    queue_button_frame.add{type="sprite-button", name=NAME.gui.queue_move_down_button, sprite="utility/speed_down", tooltip={"production-analyst-tooltip.move-down-queue"}, style=NAME.style.queue_button}
+    queue_button_frame.add{type="sprite-button", name=NAME.gui.queue_move_up_button, sprite="utility/speed_up", tooltip={"production-analyst-tooltip.move-up-queue"}, style=NAME.style.queue_button}
     playerdata.gui.queue_container = queue_flow.add{type="scroll-pane", name=NAME.gui.queue_container, style=NAME.style.queue_container}
 
     Gui.render_queue(player_index)
@@ -117,10 +117,10 @@ function Gui.create_gui(player_index)
         name=NAME.gui.history_button_frame,
         direction="horizontal",
         style=NAME.style.history_button_frame}
-    history_button_frame.add{type="sprite-button", name=NAME.gui.history_repeat_button, sprite="utility/reset", tooltip={"production-analyst.repeat-task"}, style=NAME.style.history_button}
+    history_button_frame.add{type="sprite-button", name=NAME.gui.history_repeat_button, sprite="utility/reset", tooltip={"production-analyst-tooltip.repeat-task"}, style=NAME.style.history_button}
     history_button_frame.add{type="empty-widget", style=NAME.style.button_spacer}
-    history_button_frame.add{type="sprite-button", name=NAME.gui.history_remove_button, sprite=mod_prefix.."remove-icon", tooltip={"production-analyst.remove-history"}, style=NAME.style.history_button}
-    history_button_frame.add{type="sprite-button", name=NAME.gui.history_remove_all_button, sprite="utility/trash", tooltip={"production-analyst.remove-all-history"}, style=NAME.style.history_button}
+    history_button_frame.add{type="sprite-button", name=NAME.gui.history_remove_button, sprite=mod_prefix.."remove-icon", tooltip={"production-analyst-tooltip.remove-history"}, style=NAME.style.history_button}
+    history_button_frame.add{type="sprite-button", name=NAME.gui.history_remove_all_button, sprite="utility/trash", tooltip={"production-analyst-tooltip.remove-all-history"}, style=NAME.style.history_button}
     playerdata.gui.history_container = history_flow.add{type="scroll-pane", name=NAME.gui.history_container, style=NAME.style.history_container}
 
     Gui.render_history(player_index)
@@ -300,22 +300,21 @@ function Gui.render_results(player_index)
     else
         results_table = parent.add{
             type = "table",
-            name = NAME.gui.results_table, 
-            column_count = 8,
+            name = NAME.gui.results_table,
+            column_count = 9,
             draw_horizontal_line_after_headers = true,
             style = NAME.style.results_table}
     end
 
-    -- results_table.add{type="label", caption=""}
-    results_table.add{type="label", caption="Recipe", style="bold_label"}
-    results_table.add{type="label", caption="Machines", style="bold_label"}
-    results_table.add{type="label", caption="Amount", style="bold_label"}
+    results_table.add{type="label", caption="Recipe", tooltip={"production-analyst-tooltip.recipe-column-header"}, style="bold_label"}
+    results_table.add{type="label", caption="Machines", tooltip={"production-analyst-tooltip.entities-column-header"}, style="bold_label"}
+    results_table.add{type="label", caption="% Up", tooltip={"production-analyst-tooltip.uptime-column-header"}, style="bold_label"}
+    results_table.add{type="label", caption="Amount", tooltip={"production-analyst-tooltip.amount-column-header"}, style="bold_label"}
     results_table.add{type="label", caption=""}
-    results_table.add{type="label", caption="Crafts", style="bold_label"}
-    results_table.add{type="label", caption="Total", style="bold_label"}
-    results_table.add{type="label", caption="Per minute", style="bold_label"}
-    results_table.add{type="label", caption="%", style="bold_label"}
-    -- results_table.add{type="label", caption=""}
+    results_table.add{type="label", caption="Crafts", tooltip={"production-analyst-tooltip.crafts-column-header"}, style="bold_label"}
+    results_table.add{type="label", caption="Total", tooltip={"production-analyst-tooltip.total-column-header"}, style="bold_label"}
+    results_table.add{type="label", caption="Per minute", tooltip={"production-analyst-tooltip.total-per-minute-column-header"}, style="bold_label"}
+    results_table.add{type="label", caption="%", tooltip={"production-analyst-tooltip.percentage-column-header"}, style="bold_label"}
 
     local recipes_sorted = {}
 
@@ -346,19 +345,20 @@ function Gui.render_results(player_index)
     end)
 
     for _, recipe in pairs(recipes_sorted) do
-        -- results_table.add{type="sprite-button", style="slot_button", sprite=recipe_icon}
         local recipe_icon = "[img=recipe/" .. recipe.recipe_name .. "] "
-        local percentage = string.format("%.00f", recipe.percentage).."%"
+        local uptime = math.min(100*recipe.crafts/(recipe.max_crafts or 1), 100)
+        local uptime_str = string.format("%.00f", uptime) .. "%"
+        local percentage_str = string.format("%.00f", recipe.percentage).."%"
 
         results_table.add{type="label", caption={"", recipe_icon, recipe.luarecipe.localised_name}}
         results_table.add{type="label", caption=recipe.machines}
+        results_table.add{type="label", caption=uptime_str}
         results_table.add{type="label", caption=recipe.amount}
         results_table.add{type="label", caption="×"}
         results_table.add{type="label", caption=recipe.crafts}
         results_table.add{type="label", caption=recipe.consumed}
         results_table.add{type="label", caption=string.format("%.00f", recipe.consumed_per_min)}
-        results_table.add{type="progressbar", value=recipe.percentage/100, caption=percentage, style=NAME.style.recipe_percentage_progressbar}
-        -- results_table.add{type="label", caption=string.format("%.00f", recipe.percentage).."%"}
+        results_table.add{type="progressbar", value=recipe.percentage/100, caption=percentage_str, style=NAME.style.recipe_percentage_progressbar}
     end
 end
 

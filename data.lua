@@ -137,21 +137,23 @@ guistyle[NAME.style.results_table] = {
         {column=1, alignment="left"},
         {column=2, alignment="right"},
         {column=3, alignment="right"},
-        {column=4, alignment="center"},
-        {column=5, alignment="left"},
-        {column=6, alignment="right"},
+        {column=4, alignment="right"},
+        {column=5, alignment="center"},
+        {column=6, alignment="left"},
         {column=7, alignment="right"},
-        {column=8, alignment="center"}
+        {column=8, alignment="right"},
+        {column=9, alignment="center"}
     },
     column_widths = {
         {column=1, width=200},
-        {column=2, width=65},
-        {column=3, width=65},
-        {column=4, width=15},
-        {column=5, width=40},
-        {column=6, width=67},
+        {column=2, width=45},
+        {column=3, width=35},
+        {column=4, width=65},
+        {column=5, width=15},
+        {column=6, width=40},
         {column=7, width=67},
-        {column=8, width=190}
+        {column=8, width=67},
+        {column=9, width=170}
     },
     hovered_row_color = {0.4, 0.4, 0.4}
 }
@@ -161,7 +163,7 @@ guistyle[NAME.style.recipe_percentage_progressbar] = {
     color = {0.95, 0.95, 0.95},
     font_color = {1, 1, 1},
     filled_font_color = {0.25, 0.25, 0.25},
-    width = 180,
+    width = 165,
     bar_width = 20,
     horizontal_align = "center"
 }
