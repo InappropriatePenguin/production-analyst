@@ -2,24 +2,15 @@
 Version: 1.1.1
 Date: 2021-10-22
   Features:
-    - Added a percentage uptime column, which shows the actual number of crafts of a recipe divided
-      by the theoretical maximum that could have been completed if all of the monitored machines
-      were working at 100% capacity. This takes into account their speed bonuses. Having a % uptime
-      significantly below 100% doesn't necessarily indicate that the machiens are input-starved,
-      as it could also happen if their outputs are full, or they're low on power for example.
-    - Improved calculation of ingredient consumption for recipes that yield back variable or fixed
-      amounts of their ingredients. Furethermore, recipes that produce more of an ingredient than
-      they consume (like Kovarex enrichment) will no longer be included in consumption results.
+    - Added a percentage uptime column, which shows the actual number of crafts of a recipe divided by the theoretical maximum that could have been completed if all of the monitored machines were working at 100% capacity. This takes into account their speed bonuses. Having a % uptime significantly below 100% doesn't necessarily indicate that the machines are input-starved, as it could also happen if their outputs are full, or they're low on power for example.
+    - Improved calculation of ingredient consumption for recipes that yield back variable or fixed amounts of their ingredients. Furethermore, recipes that produce more of an ingredient than they consume (like Kovarex enrichment) will no longer be included in consumption results.
     - Added tooltips to column headers to explain what they show.
 ---------------------------------------------------------------------------------------------------
 Version: 1.1.0
 Date: 2021-10-16
   Features:
-    - Reworked how the mod initially finds relevant entities to monitor at the beginning of a run,
-      improving performance on very large maps.
-    - Added a command "/reset-prod-analyst-entities", which you can use if a crafting machine isn't
-      being monitored by the mod during a run where it should be. This can happen if a different
-      mod created that entity without raising the corresponding scripting event.
+    - Reworked how the mod initially finds relevant entities to monitor at the beginning of a run, improving performance on very large maps.
+    - Added a command "/reset-prod-analyst-entities", which you can use if a crafting machine isn't being monitored by the mod during a run where it should be. This can happen if a different mod created that entity without raising the corresponding scripting event.
     - Changed the mod button style to better fit with other mod buttons.
 ---------------------------------------------------------------------------------------------------
 Version: 1.0.2
