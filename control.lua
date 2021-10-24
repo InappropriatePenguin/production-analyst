@@ -15,16 +15,28 @@ end
 script.on_init(on_init)
 
 function on_player_created(event)
-    playerdata = get_make_playerdata(event.player_index)
+    get_make_playerdata(event.player_index)
 
     local overhead_setting =
-        settings.get_player_settings(event.player_index)[NAME.setting.overhead_button]
-    if not overhead_setting then return end
-
-    -- Create overhead button
-    Gui.create_overhead_button(event.player_index)
+        settings.get_player_settings(event.player_index)[NAME.setting.overhead_button].value
+    if overhead_setting then Gui.create_overhead_button(event.player_index) end
 end
 script.on_event(defines.events.on_player_created, on_player_created)
+
+function on_player_joined_game(event)
+    local playerdata = get_make_playerdata(event.player_index)
+
+    local overhead_setting =
+        settings.get_player_settings(event.player_index)[NAME.setting.overhead_button].value
+
+    if overhead_setting and not playerdata.gui.overhead_button then
+        Gui.create_overhead_button(event.player_index)
+    elseif not overhead_setting and playerdata.gui.overhead_button then
+        playerdata.gui.overhead_button.destroy()
+        playerdata.gui.overhead_button = nil
+    end
+end
+script.on_event(defines.events.on_player_joined_game, on_player_joined_game)
 
 ---Removes playerdata references associated with the removed player
 ---@param event table
@@ -79,9 +91,9 @@ script.on_configuration_changed(on_configuration_changed)
 function on_runtime_mod_setting_changed(event)
     if event.player_index and event.setting == NAME.setting.overhead_button then
         local playerdata = get_make_playerdata(event.player_index)
-        local setting = settings.get_player_settings(event.player_index)[NAME.setting.overhead_button]
+        local setting = settings.get_player_settings(event.player_index)[NAME.setting.overhead_button].value
 
-        if setting.value == true then
+        if setting == true then
             Gui.create_overhead_button(event.player_index)
         elseif playerdata.gui.overhead_button then
             playerdata.gui.overhead_button.destroy()
