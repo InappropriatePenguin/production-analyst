@@ -1,4 +1,9 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.1.3
+Date: 2021-10-26
+  Bugfixes:
+    - Fixed crash that occured when a monitored crafting entity had its recipe unset or modified within the first second of a run.
+---------------------------------------------------------------------------------------------------
 Version: 1.1.2
 Date: 2021-10-24
   Bugfixes:
