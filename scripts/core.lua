@@ -85,12 +85,6 @@ function start_task(force_name, index)
     task.recipes = get_consuming_recipes(task.ingredient, forcedata)
     task.consumers = get_consumers(task, forcedata)
 
-    for _, consumer in pairs(task.consumers) do
-        if consumer.luaentity and consumer.luaentity.valid then
-            consumer.start = consumer.luaentity.products_finished
-        end
-    end
-
     task.start_tick = game.tick
     forcedata.is_sampling = true
     add_to_history(force_name, task)
@@ -188,7 +182,9 @@ function get_consumers(task, forcedata)
                         recipe_name = key,
                         amount = recipes[key].amount,
                         crafting_speed = entity.crafting_speed,
-                        multiplier = multiplier
+                        multiplier = multiplier,
+                        start = entity.products_finished,
+                        count = 0
                     }
                 end
             else
