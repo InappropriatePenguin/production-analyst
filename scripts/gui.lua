@@ -350,7 +350,7 @@ function Gui.render_results(player_index)
         local uptime_str = string.format("%.00f", uptime) .. "%"
         local percentage_str = string.format("%.00f", recipe.percentage).."%"
 
-        results_table.add{type="label", caption={"", recipe_icon, recipe.luarecipe.localised_name}}
+        results_table.add{type="label", style=NAME.style.results_recipe_label, caption={"", recipe_icon, recipe.luarecipe.localised_name}}
         results_table.add{type="label", caption=recipe.machines}
         results_table.add{type="label", caption=uptime_str}
         results_table.add{type="label", caption=recipe.amount}

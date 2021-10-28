@@ -58,6 +58,7 @@ NAME = {
         results_frame = mod_prefix .. "results-frame",
         results_container = mod_prefix .. "results-table-container",
         results_table = mod_prefix .. "results-table",
+        results_recipe_label = mod_prefix .. "results-recipe-label",
         recipe_percentage_progressbar = mod_prefix .. "recipe-percentage-progressbar",
 
         right_pane_frame = mod_prefix .. "right-pane-frame",

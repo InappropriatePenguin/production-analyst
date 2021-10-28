@@ -158,6 +158,11 @@ guistyle[NAME.style.results_table] = {
     hovered_row_color = {0.4, 0.4, 0.4}
 }
 
+guistyle[NAME.style.results_recipe_label] = {
+    type = "label_style",
+    width = 195
+}
+
 guistyle[NAME.style.recipe_percentage_progressbar] = {
     type = "progressbar_style",
     color = {0.95, 0.95, 0.95},
