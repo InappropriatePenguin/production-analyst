@@ -421,7 +421,11 @@ function Gui.on_gui_click(event)
         local task_index = playerdata.gui.history_container[NAME.gui.history_listbox].selected_index
         local task = forcedata.history[task_index]
 
-        add_to_queue{ingredient=task.ingredient, run_time=task.run_time, player_index=event.player_index}
+        if task then add_to_queue{
+            ingredient=task.ingredient,
+            run_time=task.run_time,
+            player_index=event.player_index}
+        end
     elseif event.element.name == NAME.gui.history_remove_button then
         local task_index = playerdata.gui.history_container[NAME.gui.history_listbox].selected_index
         local task = forcedata.history[task_index]
