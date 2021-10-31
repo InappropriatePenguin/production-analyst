@@ -14,6 +14,12 @@ function on_init()
 end
 script.on_init(on_init)
 
+---Re-bind on_nth_tick handler if any player was sampling
+function on_load()
+    if is_any_force_sampling() then script.on_nth_tick(60, nth_tick_task) end
+end
+script.on_load(on_load)
+
 function on_player_created(event)
     get_make_playerdata(event.player_index)
 
