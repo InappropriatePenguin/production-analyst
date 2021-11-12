@@ -350,7 +350,7 @@ function Gui.render_results(player_index)
             local recipe_icon = "[img=recipe/" .. recipe.recipe_name .. "] "
             recipe_name_caption = {"", recipe_icon, recipe.luarecipe.localised_name}
         else
-            recipe_name_caption = recipe.recipe_name
+            recipe_name_caption = "[Deleted] " .. recipe.recipe_name
         end
 
         local uptime = math.min(100*recipe.crafts/(recipe.max_crafts or 1), 100)

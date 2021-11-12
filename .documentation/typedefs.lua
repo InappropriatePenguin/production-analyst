@@ -5,7 +5,7 @@
 ---@field playerdata table<uint, PlayerData> Table of Playerdata objects that belong to force
 ---@field crafting_entities table<uint, table<uint, LuaEntity>> Table of crafting entities, indexed by surface index and unit number
 ---@field queue Task[] Array of tasks, ordered by position in queue
----@field history table Table of history items
+---@field history Task[] Array of tasks performed by force
 ---@field is_sampling boolean Is force activley sampling?
 
 ---Contains data pertaining to a player.

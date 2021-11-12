@@ -75,10 +75,10 @@ function on_player_changed_force(event)
 end
 script.on_event(defines.events.on_player_changed_force, on_player_changed_force)
 
+---Handles some mod data validation
+---@param event ConfigurationChangedData
 function on_configuration_changed(event)
-    for _, player in pairs(game.players) do
-        get_make_playerdata(player.index)
-    end
+    for _, player in pairs(game.players) do get_make_playerdata(player.index) end
 
     for _, player in pairs(game.connected_players) do
         local setting = settings.get_player_settings(player.index)[NAME.setting.overhead_button]
@@ -90,6 +90,8 @@ function on_configuration_changed(event)
     for _, forcedata in pairs(global.forcedata) do
         forcedata.crafting_entities = get_crafting_entities(forcedata.name)
     end
+
+    validate_prototype_references()
 end
 script.on_configuration_changed(on_configuration_changed)
 
@@ -107,6 +109,60 @@ function on_runtime_mod_setting_changed(event)
     end
 end
 script.on_event(defines.events.on_runtime_mod_setting_changed, on_runtime_mod_setting_changed)
+
+---Validates each task and recipe to remove reference to items, fluids, and recipes that are no
+---longer in the game.
+function validate_prototype_references()
+    for _, forcedata in pairs(global.forcedata) do
+        local is_queue_modified = false
+        local is_history_modified = false
+        local n_queue = #forcedata.queue
+        local n_history = #forcedata.history
+
+        -- Remove queue tasks based on no-longer-valid ingredients
+        for i, task in pairs(forcedata.queue) do
+            local proto = task.ingredient.type == "item" and "item_prototypes" or "fluid_prototypes"
+            if not game[proto][task.ingredient.name] then
+                if forcedata.is_sampling and i == 1 then stop_task(forcedata, 1, true) end
+                forcedata.queue[i] = nil
+                is_queue_modified = true
+            end
+        end
+
+        -- If queue was modified, recompact it into an array
+        if is_queue_modified == true then
+            local queue = {}
+            for i = 1, n_queue do
+                if forcedata.queue[i] then table.insert(queue, forcedata.queue[i]) end
+            end
+            forcedata.queue = queue
+        end
+
+        -- Remove history tasks if they reference invalid prototypes
+        for i, task in pairs(forcedata.history) do
+            local proto = task.ingredient.type == "item" and "item_prototypes" or "fluid_prototypes"
+            if not game[proto][task.ingredient.name] then
+                forcedata.history[i] = nil
+                is_history_modified = true
+            end
+        end
+
+        -- If history was modified, recompact it into an array
+        if is_history_modified == true then
+            local history = {}
+            for i = 1, n_history do
+                if forcedata.history[i] then table.insert(history, forcedata.history[i]) end
+            end
+            forcedata.history = history
+        end
+
+        -- Update all guis
+        Gui.refresh_topbar(forcedata.name)
+        Gui.refresh_queue(forcedata.name)
+        Gui.refresh_history(forcedata.name)
+        Gui.refresh_results(forcedata.name)
+    end
+end
 
 ---Checks all forces to see if any are actively running a task
 ---@return boolean

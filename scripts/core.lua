@@ -127,7 +127,7 @@ end
 
 ---Gets table of recipes unlocked by the given force that consume the target ingredient.
 ---@param ingredient table Ingredient table containing type and name strings
----@param forcedata table `forcedata` table
+---@param forcedata ForceData Data pertaining to force
 ---@return table<string, Recipe> recipes Table of consuming recipes, indexed by recipe name
 function get_consuming_recipes(ingredient, forcedata)
     local recipes = {}
@@ -162,7 +162,7 @@ function get_consuming_recipes(ingredient, forcedata)
 end
 
 ---Searches through all game surfaces for relevant entities that need to be monitored.
----@param task table Task table
+---@param task Task Task information
 ---@param forcedata ForceData forcedata table
 ---@return table<uint, Consumer> consumers
 function get_consumers(task, forcedata)
@@ -256,8 +256,10 @@ end
 ---Stops work on task for a given force.
 ---@param forcedata table Forcedata table
 ---@param index number Index of task within forcedata queue, defaults to 1
-function stop_task(forcedata, index)
+---@param no_gui_refresh boolean Should players guis be refereshed to reflect change?
+function stop_task(forcedata, index, no_gui_refresh)
     index = index or 1
+    no_gui_refresh = no_gui_refresh or false
 
     assert(forcedata.queue[index], "Attempted to stop a non-existent task.")
 
@@ -267,13 +269,13 @@ function stop_task(forcedata, index)
 
     table.remove(forcedata.queue, index)
 
-    if #forcedata.queue == 0 then
-        forcedata.is_sampling = false
-    end
+    forcedata.is_sampling = false
 
     -- Refresh queues and topbars of players on this force
-    Gui.refresh_queue(forcedata.name)
-    Gui.refresh_topbar(forcedata.name)
+    if not no_gui_refresh then
+        Gui.refresh_queue(forcedata.name)
+        Gui.refresh_topbar(forcedata.name)
+    end
 
     -- Unbind tick task it no forces are currently sampling
     if not is_any_force_sampling() then script.on_nth_tick(60, nil) end
