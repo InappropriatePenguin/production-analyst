@@ -269,7 +269,10 @@ function stop_task(forcedata, index, no_gui_refresh)
 
     table.remove(forcedata.queue, index)
 
-    forcedata.is_sampling = false
+    if #forcedata.queue == 0 then
+        forcedata.is_sampling = false
+    end
+
 
     -- Refresh queues and topbars of players on this force
     if not no_gui_refresh then

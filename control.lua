@@ -123,7 +123,10 @@ function validate_prototype_references()
         for i, task in pairs(forcedata.queue) do
             local proto = task.ingredient.type == "item" and "item_prototypes" or "fluid_prototypes"
             if not game[proto][task.ingredient.name] then
-                if forcedata.is_sampling and i == 1 then stop_task(forcedata, 1, true) end
+                if forcedata.is_sampling and i == 1 then
+                    forcedata.is_sampling = false
+                    stop_task(forcedata, 1, true)
+                end
                 forcedata.queue[i] = nil
                 is_queue_modified = true
             end
