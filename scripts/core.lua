@@ -1,6 +1,6 @@
 ---Gets forcedata for a given `force_name` or creates it if it doesn't exist.
 ---@param force_name string Force's name
----@return table forcedata
+---@return ForceData forcedata
 function get_make_forcedata(force_name)
     local forcedata = global.forcedata[force_name]
 
@@ -15,7 +15,7 @@ function get_make_forcedata(force_name)
             is_sampling = false
         }
 
-        -- Save forcedata to global table
+        ---@type ForceData
         global.forcedata[force_name] = forcedata
     end
 
@@ -23,8 +23,8 @@ function get_make_forcedata(force_name)
 end
 
 ---Gets playerdata for a given `player_index` or creates it if it doesn't exist.
----@param player_index number Player index
----@return table playerdata
+---@param player_index uint Player index
+---@return PlayerData playerdata
 function get_make_playerdata(player_index)
     local playerdata = global.playerdata[player_index]
 
@@ -75,7 +75,7 @@ end
 
 ---Start analysis of a task (first in queue if no index is gen) belonging to certain force
 ---@param force_name string Force's name
----@param index number Index of task to be started within queue table, defaults to 1
+---@param index uint Index of task to be started within queue table, defaults to 1
 function start_task(force_name, index)
     local forcedata = get_make_forcedata(force_name)
     local task = forcedata.queue[index or 1]
@@ -124,7 +124,7 @@ end
 ---Gets table of recipes unlocked by the given force that consume the target ingredient.
 ---@param ingredient table Ingredient table containing type and name strings
 ---@param forcedata table `forcedata` table
----@return table recipes Table of tables containing _LuaRecipe_ objects, indexed by recipe name
+---@return table<string, Recipe> recipes Table of consuming recipes, indexed by recipe name
 function get_consuming_recipes(ingredient, forcedata)
     local recipes = {}
     local prototypes
@@ -159,8 +159,8 @@ end
 
 ---Searches through all game surfaces for relevant entities that need to be monitored.
 ---@param task table Task table
----@param forcedata table forcedata table
----@return table consumers
+---@param forcedata ForceData forcedata table
+---@return table<uint, Consumer> consumers
 function get_consumers(task, forcedata)
     local recipes = task.recipes
     local consumers = {}

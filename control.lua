@@ -9,7 +9,9 @@ local event_filter = {
     {filter="type", type="rocket-silo"}}
 
 function on_init()
+    ---@type table<string, ForceData>
     global.forcedata = {}
+    ---@type table<uint, PlayerData>
     global.playerdata = {}
 end
 script.on_init(on_init)
@@ -55,7 +57,6 @@ function on_player_removed(event)
         end
     end
 
-    -- Delete playerdata in global playerdata table
     global.playerdata[event.player_index] = nil
 end
 script.on_event(defines.events.on_player_removed, on_player_removed)
