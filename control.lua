@@ -88,9 +88,7 @@ function on_configuration_changed(event)
     end
 
     for _, forcedata in pairs(global.forcedata) do
-        if not forcedata.crafting_entities then
-            forcedata.crafting_entities = get_crafting_entities(forcedata.name)
-        end
+        forcedata.crafting_entities = get_crafting_entities(forcedata.name)
     end
 end
 script.on_configuration_changed(on_configuration_changed)

@@ -57,9 +57,9 @@ function get_make_playerdata(player_index)
     return playerdata
 end
 
----Gets crafting entities belonging to force using find_entities_filtered call
+---Gets crafting entities belonging to force.
 ---@param force_name string Force name
----@return table crafting_entities 2d table of crafting entities index by surface index, unit number
+---@return table<uint, table<uint, LuaEntity>> crafting_entities Table of crafting entities indexed by surface index and unit number
 function get_crafting_entities(force_name)
     local luaforce = game.forces[force_name]
     local crafting_entities = {}
@@ -67,7 +67,11 @@ function get_crafting_entities(force_name)
     for _, surface in pairs(game.surfaces) do
         local entities = surface.find_entities_filtered{
             type={"assembling-machine", "furnace", "rocket-silo"}, force=luaforce}
-        if #entities > 0 then crafting_entities[surface.index] = entities end
+        if #entities > 0 then
+            local entities_indexed = {}
+            for _, entity in pairs(entities) do entities_indexed[entity.unit_number] = entity end
+            crafting_entities[surface.index] = entities_indexed
+        end
     end
 
     return crafting_entities
