@@ -345,12 +345,19 @@ function Gui.render_results(player_index)
     end)
 
     for _, recipe in pairs(recipes_sorted) do
-        local recipe_icon = "[img=recipe/" .. recipe.recipe_name .. "] "
+        local recipe_name_caption
+        if recipe.luarecipe.valid then
+            local recipe_icon = "[img=recipe/" .. recipe.recipe_name .. "] "
+            recipe_name_caption = {"", recipe_icon, recipe.luarecipe.localised_name}
+        else
+            recipe_name_caption = recipe.recipe_name
+        end
+
         local uptime = math.min(100*recipe.crafts/(recipe.max_crafts or 1), 100)
         local uptime_str = string.format("%.00f", uptime) .. "%"
         local percentage_str = string.format("%.00f", recipe.percentage).."%"
 
-        results_table.add{type="label", style=NAME.style.results_recipe_label, caption={"", recipe_icon, recipe.luarecipe.localised_name}}
+        results_table.add{type="label", style=NAME.style.results_recipe_label, caption=recipe_name_caption}
         results_table.add{type="label", caption=recipe.machines}
         results_table.add{type="label", caption=uptime_str}
         results_table.add{type="label", caption=recipe.amount}
