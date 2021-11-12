@@ -1,8 +1,9 @@
 ---------------------------------------------------------------------------------------------------
 Version: 1.1.6
-Date: ????
+Date: 2021-11-12
   Bugfixes:
     - Fixed a potential source of multiplayer desyncs
+    - Fixed crash that could occur if you removed some mods from an existing game, resulting in the invalidation of item, fluid, or recipe prototypes.
 ---------------------------------------------------------------------------------------------------
 Version: 1.1.5
 Date: 2021-10-29
