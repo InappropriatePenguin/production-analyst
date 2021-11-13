@@ -8,6 +8,7 @@ local event_filter = {
     {filter="type", type="furnace"},
     {filter="type", type="rocket-silo"}}
 
+---Creates global tables.
 function on_init()
     ---@type table<string, ForceData>
     global.forcedata = {}
@@ -22,6 +23,8 @@ function on_load()
 end
 script.on_load(on_load)
 
+---Creates a PlayerData table for the player and creates the overhead gui button.
+---@param event on_player_created
 function on_player_created(event)
     get_make_playerdata(event.player_index)
 
@@ -31,6 +34,8 @@ function on_player_created(event)
 end
 script.on_event(defines.events.on_player_created, on_player_created)
 
+---Handles creation or destruction of overhead gui button based on player setting.
+---@param event on_player_joined_game
 function on_player_joined_game(event)
     local playerdata = get_make_playerdata(event.player_index)
 
@@ -46,8 +51,8 @@ function on_player_joined_game(event)
 end
 script.on_event(defines.events.on_player_joined_game, on_player_joined_game)
 
----Removes playerdata references associated with the removed player
----@param event table
+---Removes playerdata references associated with the removed player.
+---@param event on_player_removed
 function on_player_removed(event)
     -- Find and delete any references to playerdata in forcedata tables
     for _, forcedata in pairs(global.forcedata) do
@@ -61,8 +66,8 @@ function on_player_removed(event)
 end
 script.on_event(defines.events.on_player_removed, on_player_removed)
 
----Updates playerdata and forcedata tables to reflect force changes
----@param event table Event table
+---Updates playerdata and forcedata tables to reflect force changes.
+---@param event on_player_changed_force
 function on_player_changed_force(event)
     local playerdata = get_make_playerdata(event.player_index)
     playerdata.force_name = playerdata.luaplayer.force.name
@@ -75,7 +80,7 @@ function on_player_changed_force(event)
 end
 script.on_event(defines.events.on_player_changed_force, on_player_changed_force)
 
----Handles some mod data validation
+---Handles some mod data validation.
 ---@param event ConfigurationChangedData
 function on_configuration_changed(event)
     for _, player in pairs(game.players) do get_make_playerdata(player.index) end
@@ -95,6 +100,8 @@ function on_configuration_changed(event)
 end
 script.on_configuration_changed(on_configuration_changed)
 
+---Handles player setting changes.
+---@param event on_runtime_mod_setting_changed
 function on_runtime_mod_setting_changed(event)
     if event.player_index and event.setting == NAME.setting.overhead_button then
         local playerdata = get_make_playerdata(event.player_index)
@@ -167,8 +174,8 @@ function validate_prototype_references()
     end
 end
 
----Checks all forces to see if any are actively running a task
----@return boolean
+---Checks all forces to see if any are actively running a task.
+---@return boolean is_sampling
 function is_any_force_sampling()
     for _, forcedata in pairs(global.forcedata) do
         if forcedata.is_sampling then return true end
@@ -177,8 +184,8 @@ function is_any_force_sampling()
     return false
 end
 
----Creates a new task and adds it to the end of the queue for the player's force
----@param args table Table with {player_index, ingredient, run_time}
+---Creates a new task and adds it to the end of the queue for the player's force.
+---@param args table<string, uint|IngredientInfo> Table with {player_index, ingredient, run_time}
 function add_to_queue(args)
     local playerdata = get_make_playerdata(args.player_index)
     local forcedata = get_make_forcedata(playerdata.force_name)
@@ -219,6 +226,9 @@ function remove_from_queue(force_name, task_id)
     end
 end
 
+---Moves a task up the queue.
+---@param force_name string Force name
+---@param task_id string Unique task identifier
 function move_up_queue(force_name, task_id)
     local forcedata = get_make_forcedata(force_name)
     local queue = forcedata.queue
@@ -236,6 +246,9 @@ function move_up_queue(force_name, task_id)
     Gui.refresh_queue(force_name)
 end
 
+---Moves a task down the queue.
+---@param force_name string Force name
+---@param task_id string Unique task identifier
 function move_down_queue(force_name, task_id)
     local forcedata = get_make_forcedata(force_name)
     local queue = forcedata.queue
@@ -253,10 +266,10 @@ function move_down_queue(force_name, task_id)
     Gui.refresh_queue(force_name)
 end
 
----Searches for a task in a task array and returns its index
----@param tasks table[] Array of task tables, generally a queue or a history table
----@param id string Task id
----@return number|nil index
+---Searches for a task in a task array and returns its index.
+---@param tasks Task[] Array of tasks, generally a queue or a history table
+---@param id string Unique task identifier
+---@return uint|nil index
 function get_task_index(tasks, id)
     if not id then return nil end
     for index, task in pairs(tasks) do
@@ -264,14 +277,14 @@ function get_task_index(tasks, id)
     end
 end
 
----Adds a task to a force's history table
+---Adds a task to a force's history table.
 ---@param force_name string Force name
----@param task table Task table
+---@param task Task Task to be added
 function add_to_history(force_name, task)
     local forcedata = get_make_forcedata(force_name)
     table.insert(forcedata.history, 1, task)
 
-    Gui.refresh_history(force_name, 1)
+    Gui.refresh_history(force_name)
 end
 
 ---Removes a task from a force's history as long as it's not in progress.
@@ -289,6 +302,8 @@ function remove_from_history(force_name, task_id)
     end
 end
 
+---Deletes the entire history table of a force.
+---@param force_name string Force name
 function delete_history(force_name)
     local forcedata = get_make_forcedata(force_name)
     for  i = #forcedata.history, 1, -1 do
@@ -296,8 +311,8 @@ function delete_history(force_name)
     end
 end
 
----Adds entity reference to force's crafting_entities table
----@param event table
+---Adds entity reference to force's crafting_entities table.
+---@param event EntityCreationData
 function on_entity_created(event)
     local entity = event.created_entity or event.entity or event.destination
     local forcedata = get_make_forcedata(entity.force.name)
@@ -317,7 +332,7 @@ script.on_event(defines.events.on_entity_cloned, on_entity_created, event_filter
 script.on_event(defines.events.script_raised_built, on_entity_created, event_filter)
 script.on_event(defines.events.script_raised_revive, on_entity_created, event_filter)
 
----Removes entity reference from force's crafting_entities table
+---Removes entity reference from force's crafting_entities table.
 ---@param event table
 function on_entity_destroyed(event)
     local entity = event.entity
@@ -339,6 +354,8 @@ script.on_event(defines.events.on_player_mined_entity, on_entity_destroyed, even
 script.on_event(defines.events.on_robot_mined_entity, on_entity_destroyed, event_filter)
 script.on_event(defines.events.script_raised_destroy, on_entity_destroyed, event_filter)
 
+---Deletes entities that were on cleared or deleted surface from crafting entity lists.
+---@param event on_surface_cleared|on_surface_deleted
 function on_surface_cleared(event)
     for _, forcedata in pairs(global.forcedata) do
         forcedata.crafting_entities[event.surface_index] = nil
@@ -347,6 +364,8 @@ end
 script.on_event(defines.events.on_surface_cleared, on_surface_cleared)
 script.on_event(defines.events.on_surface_deleted, on_surface_cleared)
 
+---Seeks new data from monitored machines and refreshes guis if appropriate.
+---@param event NthTickEventData
 function nth_tick_task(event)
     for _, forcedata in pairs(global.forcedata) do
         if forcedata.is_sampling then
@@ -371,7 +390,8 @@ function nth_tick_task(event)
     end
 end
 
--- Bind hotkey to GUI toggling function
+---Bind hotkey to GUI toggling function.
+---@param event CustomInputEvent
 function on_toggle_hotkey(event)
     Gui.toggle(event.player_index)
 end

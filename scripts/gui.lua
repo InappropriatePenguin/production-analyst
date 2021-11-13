@@ -2,8 +2,8 @@ Gui = {}
 
 local mod_gui = require("__core__/lualib/mod-gui")
 
----Creates an overhead shortcut for the given player
----@param player_index number Player index
+---Creates an overhead shortcut for given player.
+---@param player_index uint Player index
 function Gui.create_overhead_button(player_index)
     local playerdata = get_make_playerdata(player_index)
     local button_flow = mod_gui.get_button_flow(playerdata.luaplayer)
@@ -23,6 +23,8 @@ function Gui.create_overhead_button(player_index)
     }
 end
 
+---Creates the main mod gui for given player.
+---@param player_index uint Player index
 function Gui.create_gui(player_index)
     local playerdata = get_make_playerdata(player_index)
     local forcedata = get_make_forcedata(playerdata.force_name)
@@ -272,7 +274,7 @@ function Gui.render_history(player_index)
     Gui.refresh_results(forcedata.name)
 end
 
-function Gui.refresh_history(force_name, index)
+function Gui.refresh_history(force_name)
     local forcedata = get_make_forcedata(force_name)
     for player_index, playerdata in pairs(forcedata.playerdata) do
         if playerdata.luaplayer.connected and playerdata.is_gui_open then

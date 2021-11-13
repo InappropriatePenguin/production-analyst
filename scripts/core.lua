@@ -77,7 +77,7 @@ function get_crafting_entities(force_name)
     return crafting_entities
 end
 
----Start analysis of a task (first in queue if no index is gen) belonging to certain force
+---Start analysis of a task (first in queue if no index given) belonging to certain force.
 ---@param force_name string Force's name
 ---@param index uint Index of task to be started within queue table, defaults to 1
 function start_task(force_name, index)
@@ -99,9 +99,9 @@ function start_task(force_name, index)
 end
 
 ---Gets the amount of ingredient consumed by a recipe after subtracting average product yield of
----of the ingredient from the recipe
+---of the ingredient from the recipe.
 ---@param ingredient_name string Ingredient name
----@param recipe table `LuaRecipe`
+---@param recipe LuaRecipe
 ---@return number|nil amount Amount of ingredient consumed by recipe, nil if that is <= 0
 function get_ingredient_amount(ingredient_name, recipe)
     if recipe.object_name ~= "LuaRecipe" then return end
@@ -126,7 +126,7 @@ function get_ingredient_amount(ingredient_name, recipe)
 end
 
 ---Gets table of recipes unlocked by the given force that consume the target ingredient.
----@param ingredient table Ingredient table containing type and name strings
+---@param ingredient IngredientInfo Ingredient table containing type and name strings
 ---@param forcedata ForceData Data pertaining to force
 ---@return table<string, Recipe> recipes Table of consuming recipes, indexed by recipe name
 function get_consuming_recipes(ingredient, forcedata)
@@ -204,7 +204,7 @@ function get_consumers(task, forcedata)
 end
 
 ---Updates number of crafts completed by each consumer.
----@param consumers table Consumers table
+---@param consumers table<uint, Consumer> Consumers table
 function inspect_machines(consumers)
     for key, consumer in pairs(consumers) do
         if consumer.luaentity and consumer.luaentity.valid then
@@ -254,9 +254,9 @@ function compute_totals(task)
 end
 
 ---Stops work on task for a given force.
----@param forcedata table Forcedata table
----@param index number Index of task within forcedata queue, defaults to 1
----@param no_gui_refresh boolean Should players guis be refereshed to reflect change?
+---@param forcedata ForceData Forcedata object
+---@param index? uint Index of task within queue, defaults to 1
+---@param no_gui_refresh? boolean Should players guis _not_ be refereshed?
 function stop_task(forcedata, index, no_gui_refresh)
     index = index or 1
     no_gui_refresh = no_gui_refresh or false
@@ -272,7 +272,6 @@ function stop_task(forcedata, index, no_gui_refresh)
     if #forcedata.queue == 0 then
         forcedata.is_sampling = false
     end
-
 
     -- Refresh queues and topbars of players on this force
     if not no_gui_refresh then
