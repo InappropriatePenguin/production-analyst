@@ -249,7 +249,7 @@ function compute_totals(task)
     for _, recipe in pairs(task.recipes) do
         recipe.consumed_per_s = recipe.consumed / time_in_sec
         recipe.consumed_per_min = recipe.consumed / time_in_min
-        recipe.percentage = (recipe.consumed / total_consumed * 100)
+        recipe.percentage = total_consumed > 0 and (recipe.consumed / total_consumed * 100) or nil
     end
 end
 
