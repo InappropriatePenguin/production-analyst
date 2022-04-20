@@ -1,4 +1,9 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.1.7
+Date: 2022-04-20
+  Bugfixes:
+    - Fixed a division-by-zero bug that could unwittingly cause mod data corruption. This could happen if one of the runs in your history had zero consumption in the time monitored, as long as the ingredient had any recipes that can consume it. If you encountered this issue, you can simply disable the mod and reload your savefile, as this should purge the mod's data from the savefile.
+---------------------------------------------------------------------------------------------------
 Version: 1.1.6
 Date: 2021-11-12
   Bugfixes:
