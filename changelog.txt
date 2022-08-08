@@ -1,4 +1,9 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.1.8
+Date: 2022-08-08
+  Bugfixes:
+    - Fixed rare crash that could occur if a player removed a crafting entity from a surface under some circumstances (#2).
+---------------------------------------------------------------------------------------------------
 Version: 1.1.7
 Date: 2022-04-20
   Bugfixes:
