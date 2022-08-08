@@ -185,7 +185,7 @@ function is_any_force_sampling()
 end
 
 ---Creates a new task and adds it to the end of the queue for the player's force.
----@param args table<string, uint|IngredientInfo> Table with {player_index, ingredient, run_time}
+---@param args {player_index: uint, ingredient:IngredientInfo, run_time:uint}
 function add_to_queue(args)
     local playerdata = get_make_playerdata(args.player_index)
     local forcedata = get_make_forcedata(playerdata.force_name)
@@ -273,7 +273,7 @@ end
 function get_task_index(tasks, id)
     if not id then return nil end
     for index, task in pairs(tasks) do
-        if task.id == id then return index end
+        if task.id == id then return index --[[@as uint]] end
     end
 end
 

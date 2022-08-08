@@ -79,7 +79,7 @@ end
 
 ---Start analysis of a task (first in queue if no index given) belonging to certain force.
 ---@param force_name string Force's name
----@param index uint Index of task to be started within queue table, defaults to 1
+---@param index? uint Index of task to be started within queue table, defaults to 1
 function start_task(force_name, index)
     local forcedata = get_make_forcedata(force_name)
     local task = forcedata.queue[index or 1]
