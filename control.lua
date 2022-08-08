@@ -339,10 +339,10 @@ function on_entity_destroyed(event)
     local forcedata = get_make_forcedata(entity.force.name)
     local surface_index = entity.surface.index
 
+    if not forcedata.crafting_entities[surface_index] then return end
+
     -- Remove entity reference if it exists
-    if forcedata.crafting_entities[surface_index] then
-        forcedata.crafting_entities[surface_index][entity.unit_number] = nil
-    end
+    forcedata.crafting_entities[surface_index][entity.unit_number] = nil
 
     -- Remove surface table reference if empty
     if table_size(forcedata.crafting_entities[surface_index]) == 0 then
