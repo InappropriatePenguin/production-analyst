@@ -375,16 +375,13 @@ function Gui.refresh_results(force_name)
     local forcedata = get_make_forcedata(force_name)
 
     for player_index, playerdata in pairs(forcedata.playerdata) do
-        if playerdata.luaplayer.connected then
-            if not playerdata.history_selected_id and #forcedata.history > 0 then
+        if playerdata.luaplayer.connected and playerdata.is_gui_open then
+            if not playerdata.history_selected_id and next(forcedata.history) then
                 playerdata.history_selected_id = forcedata.history[1].id
                 Gui.render_history(player_index)
             end
 
-            local index = get_task_index(forcedata.history, playerdata.history_selected_id)
-            if playerdata.is_gui_open then
-                Gui.render_results(player_index)
-            end
+            Gui.render_results(player_index)
         end
     end
 end
