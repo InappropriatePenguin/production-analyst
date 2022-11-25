@@ -2,7 +2,8 @@
 Version: 1.1.9
 Date: 2022-11-25
   Bugfixes:
-    - Fixed crash that could occur when a run is started during multiplayer games.
+    - Fixed crash that would occur when a run is started during multiplayer games.
+    - Fixed crash that would occur when processing recipes that produce an amount range of the item/fluid being evaluated.
 ---------------------------------------------------------------------------------------------------
 Version: 1.1.8
 Date: 2022-08-08
